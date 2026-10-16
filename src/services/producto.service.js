@@ -7,7 +7,7 @@ const validarId = (id) => {
     return numero;
 };
 
-const listar = () => productoRepository.findAll();
+const listar = (nombre) => productoRepository.findAll(nombre);
 
 const obtenerPorId = async (id) => {
     const producto = await productoRepository.findById(validarId(id));

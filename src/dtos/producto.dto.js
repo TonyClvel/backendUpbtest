@@ -15,7 +15,7 @@ const validarCampos = (body, { parcial }) => {
     }
 
     if (precio !== undefined) {
-        if (typeof precio !== 'number' || precio < 0) errores.push('"precio" debe ser un número mayor o igual a 0');
+        if (typeof precio !== 'number' || !Number.isFinite(precio) || precio < 0) errores.push('"precio" debe ser un número mayor o igual a 0');
         else datos.precio = precio;
     } else if (!parcial) {
         datos.precio = 0;
