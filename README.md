@@ -34,6 +34,9 @@ El servicio de producción utiliza:
 - Start command: `npm start`
 - Health check path: `/api/health`
 
+Render está conectado a la rama `main` y despliega automáticamente después de
+cada actualización. GitHub Actions valida lint, pruebas y build.
+
 Variables requeridas en Render: `DATABASE_URL`, `DB_SSL`, `JWT_SECRET`,
 `DEMO_EMAIL`, `DEMO_PASSWORD`, `DEMO_NAME` y `CORS_ORIGINS`. Los valores
 secretos se configuran en el Dashboard y nunca se guardan en Git.

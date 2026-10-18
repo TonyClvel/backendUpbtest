@@ -1,7 +1,11 @@
-name: Validar y desplegar en Render
+name: Validar backend
 
 on:
   push:
+    branches:
+      - main
+      - feat/**
+  pull_request:
     branches:
       - main
   workflow_dispatch:
@@ -10,7 +14,7 @@ permissions:
   contents: read
 
 concurrency:
-  group: deploy-render-production
+  group: backend-ci-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
@@ -38,31 +42,3 @@ jobs:
 
       - name: Validar build
         run: npm run build
-
-      - name: Solicitar despliegue en Render
-        env:
-          DEPLOY_HOOK_URL: ${{ secrets.DEPLOY_HOOK_URL }}
-        run: |
-          if [ -z "$DEPLOY_HOOK_URL" ]; then
-            echo "ERROR: el secret DEPLOY_HOOK_URL no existe o está vacío"
-            exit 1
-          fi
-
-          response_file="$(mktemp)"
-          http_code=$(curl --silent --show-error \
-            --output "$response_file" \
-            --write-out "%{http_code}" \
-            --request POST \
-            "$DEPLOY_HOOK_URL") || {
-              echo "ERROR: no se pudo conectar con el Deploy Hook"
-              cat "$response_file"
-              exit 1
-            }
-
-          echo "Render respondió HTTP $http_code"
-          cat "$response_file"
-
-          case "$http_code" in
-            200|202) echo "Despliegue solicitado correctamente" ;;
-            *) echo "ERROR: Render rechazó el Deploy Hook"; exit 1 ;;
-          esac
