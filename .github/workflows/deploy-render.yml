@@ -30,8 +30,14 @@ jobs:
       - name: Instalar dependencias
         run: npm ci
 
-      - name: Validar sintaxis
-        run: find src -name '*.js' -print0 | xargs -0 -n1 node --check
+      - name: Validar código
+        run: npm run lint
+
+      - name: Ejecutar pruebas
+        run: npm test
+
+      - name: Validar build
+        run: npm run build
 
       - name: Solicitar despliegue en Render
         env:

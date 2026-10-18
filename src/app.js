@@ -2,17 +2,37 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const productoRoutes = require('./routes/producto.routes');
+const authRoutes = require('./routes/auth.routes');
 const inicializarBaseDeDatos = require('./db/init');
 
 const app = express();
 
-app.use(cors());
+const origenesPermitidos = (process.env.CORS_ORIGINS || process.env.FRONTEND_URL || '')
+    .split(',')
+    .map((origen) => origen.trim())
+    .filter(Boolean);
+
+app.use(cors({
+    origin(origen, callback) {
+        if (!origen || origenesPermitidos.length === 0 || origenesPermitidos.includes(origen)) {
+            return callback(null, true);
+        }
+        const error = new Error('Origen no permitido por CORS');
+        error.status = 403;
+        return callback(error);
+    },
+}));
 app.use(express.json());
 
 app.get('/', (req, res) => {
     res.send('API backendUpb funcionando');
 });
 
+app.get('/api/health', (req, res) => {
+    res.json({ status: 'ok' });
+});
+
+app.use('/api/auth', authRoutes);
 app.use('/api/productos', productoRoutes);
 
 // Ruta no encontrada

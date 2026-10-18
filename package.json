@@ -1,12 +1,15 @@
 {
   "name": "backendupb",
   "version": "1.0.0",
-  "description": "",
+  "description": "API sencilla de productos y autenticación para la tarea UPB",
   "main": "src/app.js",
   "scripts": {
     "start": "node src/app.js",
-    "dev": "nodemon src/app.js",
-    "db:init": "node src/db/init.js"
+    "dev": "node --watch src/app.js",
+    "db:init": "node src/db/init.js",
+    "lint": "node scripts/check-syntax.js",
+    "build": "npm run lint",
+    "test": "node --test"
   },
   "keywords": [],
   "author": "",
@@ -16,9 +19,10 @@
     "cors": "^2.8.6",
     "dotenv": "^18.0.8",
     "express": "^5.3.0",
+    "jsonwebtoken": "^9.0.3",
     "pg": "^8.23.1"
   },
   "devDependencies": {
-    "nodemon": "^3.1.14"
+    "supertest": "^7.3.1"
   }
 }
